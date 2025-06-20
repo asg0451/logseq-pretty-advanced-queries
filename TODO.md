@@ -1,6 +1,6 @@
 - [X] Confirm PRD spec details (UI presets, feature scope) with stakeholders
 - [X] Initialize git repository & commit PRD and baseline files
-- [ ] Add MIT License file
+- [X] Add MIT License file
 - [ ] Bootstrap project via Vite React-TS template (`pnpm create vite@latest logseq-query-editor --template react-ts`)
 - [ ] Install runtime dependencies: `codemirror`, `@nextjournal/clojure-mode`, `@codemirror/state`, `@codemirror/view`, `@logseq/libs`
 - [ ] Install dev dependency: `vite-plugin-singlefile`
