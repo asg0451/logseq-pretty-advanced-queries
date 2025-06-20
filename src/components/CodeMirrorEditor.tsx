@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { EditorState } from '@codemirror/state'
-import { EditorView, basicSetup } from 'codemirror'
+import { EditorView } from 'codemirror'
 import { keymap } from '@codemirror/view'
 // The Clojure mode ships as a CodeMirror 6 LanguageSupport extension.
 // It works for both Clojure and ClojureScript.
