@@ -39,7 +39,7 @@ export default function CodeMirrorEditor({
       doc: value,
       extensions: [
         basicSetup,
-        clojureMode.language_support(),
+        clojureMode.language_support,
         keymap.of([
           {
             key: 'Shift-Enter',
