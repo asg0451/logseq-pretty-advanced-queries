@@ -44,6 +44,8 @@ export default function CodeMirrorEditor({
 }: CodeMirrorEditorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const viewRef = useRef<EditorView | null>(null)
+  // Capture initial value to avoid dependency issues in mount effect
+  const initialValueRef = useRef(value)
   // Hold latest callback refs to avoid remounting the editor on every render.
   const onChangeRef = useRef<typeof onChange>(onChange)
   const onRunRef = useRef<typeof onRun>(onRun)
@@ -57,14 +59,13 @@ export default function CodeMirrorEditor({
     onRunRef.current = onRun
   }, [onRun])
 
-  // Mount the EditorView once. Callback refs used so we don't depend on onChange/onRun.
-
+  // Mount the EditorView once with initial value. Subsequent value changes handled separately.
   useEffect(() => {
     if (!containerRef.current) return
     if (viewRef.current) return // already mounted
 
     const state = EditorState.create({
-      doc: value,
+      doc: initialValueRef.current,
       extensions: [
         // Custom keymap first so it takes precedence over defaults
         keymap.of([
