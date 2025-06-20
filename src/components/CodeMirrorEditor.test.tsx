@@ -1,12 +1,25 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, waitFor } from '@testing-library/react'
 import { fireEvent, screen } from '@testing-library/react'
 import { useState } from 'react'
 
 import CodeMirrorEditor from './CodeMirrorEditor'
 
+// Mock prettier
+vi.mock('prettier', () => ({
+  default: {
+    format: vi.fn(),
+  },
+}))
+
+import prettier from 'prettier'
+
 // A simple smoke test to verify the editor can mount without runtime errors.
 describe('CodeMirrorEditor', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('mounts a CodeMirror instance', async () => {
     const { container } = render(
       <CodeMirrorEditor value={'(println "hello")'} />,
@@ -39,6 +52,84 @@ describe('CodeMirrorEditor', () => {
     // Should always show Undo and Redo buttons
     expect(screen.getByRole('button', { name: /undo/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /redo/i })).toBeInTheDocument()
+  })
+
+  it('formats code when format button is clicked', async () => {
+    const mockFormat = vi.mocked(prettier.format)
+    const unformattedCode = '(defn foo[x y](+ x y))'
+    const formattedCode = '(defn foo [x y]\n  (+ x y))'
+
+    // Mock prettier.format to return formatted code
+    mockFormat.mockResolvedValue(formattedCode)
+
+    const onChangeMock = vi.fn()
+
+    render(<CodeMirrorEditor value={unformattedCode} onChange={onChangeMock} />)
+
+    // Wait for editor to mount
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /format/i }),
+      ).toBeInTheDocument()
+    })
+
+    // Click the format button
+    const formatButton = screen.getByRole('button', { name: /format/i })
+    fireEvent.click(formatButton)
+
+    // Wait for async formatting to complete
+    await waitFor(() => {
+      // Verify prettier.format was called with correct arguments
+      expect(mockFormat).toHaveBeenCalledWith(unformattedCode, {
+        parser: 'clojure',
+        plugins: ['@cospaia/prettier-plugin-clojure'],
+      })
+
+      // Verify onChange was called with formatted code
+      expect(onChangeMock).toHaveBeenCalledWith(formattedCode)
+    })
+  })
+
+  it('handles formatting errors gracefully', async () => {
+    const mockFormat = vi.mocked(prettier.format)
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    // Mock prettier.format to throw an error
+    mockFormat.mockRejectedValue(new Error('Invalid Clojure syntax'))
+
+    const onChangeMock = vi.fn()
+
+    render(
+      <CodeMirrorEditor value="(defn incomplete" onChange={onChangeMock} />,
+    )
+
+    // Wait for editor to mount
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /format/i }),
+      ).toBeInTheDocument()
+    })
+
+    // Click the format button
+    const formatButton = screen.getByRole('button', { name: /format/i })
+    fireEvent.click(formatButton)
+
+    // Wait for error handling
+    await waitFor(() => {
+      // Verify prettier.format was called
+      expect(mockFormat).toHaveBeenCalled()
+
+      // Verify error was logged
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to format code:',
+        expect.any(Error),
+      )
+
+      // Verify onChange was NOT called since formatting failed
+      expect(onChangeMock).not.toHaveBeenCalled()
+    })
+
+    consoleSpy.mockRestore()
   })
 })
 
