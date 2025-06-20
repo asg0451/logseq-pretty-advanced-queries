@@ -1,10 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { EditorState } from '@codemirror/state'
-import { EditorView } from 'codemirror'
+import { EditorView, basicSetup } from 'codemirror'
 import { keymap } from '@codemirror/view'
 // The Clojure mode ships as a CodeMirror 6 LanguageSupport extension.
 // It works for both Clojure and ClojureScript.
-import { default_extensions, complete_keymap } from '@nextjournal/clojure-mode'
+import {
+  default_extensions,
+  complete_keymap,
+  language_support,
+} from '@nextjournal/clojure-mode'
 
 export interface CodeMirrorEditorProps {
   /** Current editor value */
@@ -38,6 +42,8 @@ export default function CodeMirrorEditor({
     const state = EditorState.create({
       doc: value,
       extensions: [
+        basicSetup,
+        language_support,
         keymap.of(complete_keymap),
         ...default_extensions,
         keymap.of([
