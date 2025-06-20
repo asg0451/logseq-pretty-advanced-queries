@@ -165,3 +165,23 @@ describe('CodeMirrorEditor stability', () => {
     })
   })
 })
+
+describe('CodeMirrorEditor hotkeys', () => {
+  it('invokes onRun when Shift+Enter is pressed', async () => {
+    const onRun = vi.fn()
+    const { container } = render(<CodeMirrorEditor value="()" onRun={onRun} />)
+
+    const editorEl = container.querySelector('.cm-content') as HTMLElement
+    expect(editorEl).toBeTruthy()
+
+    editorEl.focus()
+
+    // Dispatch Shift+Enter keydown
+    fireEvent.keyDown(editorEl, { key: 'Enter', code: 'Enter', shiftKey: true })
+
+    // Wait for any async handlers
+    await waitFor(() => {
+      expect(onRun).toHaveBeenCalledTimes(1)
+    })
+  })
+})

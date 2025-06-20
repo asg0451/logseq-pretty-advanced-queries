@@ -11,7 +11,7 @@
 - [X] Implement query runner using `logseq.DB.datascriptQuery` (mocked in sandbox) that returns prettified JSON
 - [X] Create result viewer component with `<pre>` display, copy-to-clipboard, and auto-scroll
 - [X] Make the editor have toolbars and other basic UI elements, with built-in codemirror functionality.
-- [ ] Configure Vite single-file build (add plugin, adjust `vite.config.ts`) and verify `dist/main.js` output size
+- [X] Configure Vite single-file build (add plugin, adjust `vite.config.ts`) and verify `dist/main.js` output size
 - [ ] Integrate toolbar button & modal panel within actual Logseq environment (`logseq.UI.registerUIItem`)
 - [ ] Test plugin on Logseq Desktop ≥0.10.x for editor, execution, and results display
 - [ ] Write README with setup, development, and release instructions; record demo GIF

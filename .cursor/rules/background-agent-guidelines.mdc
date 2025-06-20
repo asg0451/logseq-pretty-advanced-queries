@@ -7,3 +7,4 @@ to be included in all background agent runs.
 
 # guidelines
 - always ensure that the project lints and builds and passes tests before declaring success.
+- use `pnpm run test:ci` to run tests, otherwise it will hang forever

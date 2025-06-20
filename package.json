@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@codemirror/commands": "^6.8.1",
+    "@codemirror/search": "^6.4.0",
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.37.2",
     "@cospaia/prettier-plugin-clojure": "^0.0.2",

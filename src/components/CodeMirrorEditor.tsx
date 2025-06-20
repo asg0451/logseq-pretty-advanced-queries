@@ -1,8 +1,18 @@
 import { useEffect, useRef } from 'react'
 import { EditorState } from '@codemirror/state'
 import { EditorView, basicSetup } from 'codemirror'
-import { keymap } from '@codemirror/view'
-import { undo, redo } from '@codemirror/commands'
+import {
+  highlightActiveLineGutter,
+  highlightActiveLine,
+  rectangularSelection,
+  keymap,
+} from '@codemirror/view'
+import {
+  highlightSelectionMatches,
+  search,
+  searchKeymap,
+} from '@codemirror/search'
+import { undo, redo, indentWithTab } from '@codemirror/commands'
 // The Clojure mode ships as a CodeMirror 6 LanguageSupport extension.
 // It works for both Clojure and ClojureScript.
 import {
@@ -36,6 +46,8 @@ export default function CodeMirrorEditor({
 }: CodeMirrorEditorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const viewRef = useRef<EditorView | null>(null)
+  // Capture initial value to avoid dependency issues in mount effect
+  const initialValueRef = useRef(value)
   // Hold latest callback refs to avoid remounting the editor on every render.
   const onChangeRef = useRef<typeof onChange>(onChange)
   const onRunRef = useRef<typeof onRun>(onRun)
@@ -76,18 +88,15 @@ export default function CodeMirrorEditor({
     }
   }
 
-  // Mount the EditorView once. Callback refs used so we don't depend on onChange/onRun.
+  // Mount the EditorView once with initial value. Subsequent value changes handled separately.
   useEffect(() => {
     if (!containerRef.current) return
     if (viewRef.current) return // already mounted
 
     const state = EditorState.create({
-      doc: value,
+      doc: initialValueRef.current,
       extensions: [
-        basicSetup,
-        language_support,
-        keymap.of(complete_keymap),
-        ...default_extensions,
+        // Custom keymap first so it takes precedence over defaults
         keymap.of([
           {
             key: 'Shift-Enter',
@@ -97,6 +106,20 @@ export default function CodeMirrorEditor({
             },
           },
         ]),
+        basicSetup,
+        language_support,
+        keymap.of(complete_keymap),
+        ...default_extensions,
+        // Enhanced editor ergonomics beyond the default basicSetup
+        highlightActiveLineGutter(),
+        highlightActiveLine(),
+        highlightSelectionMatches(),
+        search({ top: true }),
+        EditorView.lineWrapping,
+        rectangularSelection(),
+        keymap.of([indentWithTab]),
+        // Search panel & keys (Cmd/Ctrl+F, etc.)
+        keymap.of(searchKeymap),
         EditorView.updateListener.of(update => {
           if (update.docChanged && onChangeRef.current) {
             onChangeRef.current(update.state.doc.toString())
@@ -108,6 +131,10 @@ export default function CodeMirrorEditor({
             fontFamily:
               'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace',
             fontSize: '14px',
+            textAlign: 'left',
+          },
+          '.cm-editor': {
+            textAlign: 'left',
           },
         }),
       ],
