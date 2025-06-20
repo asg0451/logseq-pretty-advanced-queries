@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { EditorState } from '@codemirror/state'
 import { EditorView, basicSetup } from 'codemirror'
 import { keymap } from '@codemirror/view'
+import { undo, redo } from '@codemirror/commands'
 // The Clojure mode ships as a CodeMirror 6 LanguageSupport extension.
 // It works for both Clojure and ClojureScript.
 import {
@@ -33,8 +34,21 @@ export default function CodeMirrorEditor({
 }: CodeMirrorEditorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const viewRef = useRef<EditorView | null>(null)
+  // Hold latest callback refs to avoid remounting the editor on every render.
+  const onChangeRef = useRef<typeof onChange>(onChange)
+  const onRunRef = useRef<typeof onRun>(onRun)
 
-  // Initialise the EditorView once the DOM node is available.
+  // Update refs whenever callbacks change.
+  useEffect(() => {
+    onChangeRef.current = onChange
+  }, [onChange])
+
+  useEffect(() => {
+    onRunRef.current = onRun
+  }, [onRun])
+
+  // Mount the EditorView once. Callback refs used so we don't depend on onChange/onRun.
+
   useEffect(() => {
     if (!containerRef.current) return
     if (viewRef.current) return // already mounted
@@ -50,14 +64,14 @@ export default function CodeMirrorEditor({
           {
             key: 'Shift-Enter',
             run: () => {
-              onRun?.()
+              onRunRef.current?.()
               return true // prevent default newline insert
             },
           },
         ]),
         EditorView.updateListener.of(update => {
-          if (update.docChanged && onChange) {
-            onChange(update.state.doc.toString())
+          if (update.docChanged && onChangeRef.current) {
+            onChangeRef.current(update.state.doc.toString())
           }
         }),
         EditorView.theme({
@@ -77,7 +91,7 @@ export default function CodeMirrorEditor({
       viewRef.current?.destroy()
       viewRef.current = null
     }
-  }, [onChange, onRun, value])
+  }, [])
 
   // Keep external value in sync when it changes (rare)
   useEffect(() => {
@@ -90,6 +104,48 @@ export default function CodeMirrorEditor({
   }, [value])
 
   return (
-    <div ref={containerRef} style={{ height: 300, border: '1px solid #444' }} />
+    <div style={{ display: 'flex', flexDirection: 'column', height: 340 }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 8,
+          alignItems: 'center',
+          padding: '4px 0',
+        }}
+      >
+        {/* Run Button */}
+        {onRun && (
+          <button
+            type="button"
+            onClick={() => onRun()}
+            title="Run (Shift+Enter)"
+            style={{ cursor: 'pointer' }}
+          >
+            ▶ Run
+          </button>
+        )}
+
+        {/* Undo / Redo use CodeMirror commands */}
+        <button
+          type="button"
+          onClick={() => viewRef.current && undo(viewRef.current)}
+          title="Undo (Ctrl/Cmd+Z)"
+          style={{ cursor: 'pointer' }}
+        >
+          ↺ Undo
+        </button>
+        <button
+          type="button"
+          onClick={() => viewRef.current && redo(viewRef.current)}
+          title="Redo (Ctrl/Cmd+Y)"
+          style={{ cursor: 'pointer' }}
+        >
+          ↻ Redo
+        </button>
+      </div>
+
+      {/* Editor container */}
+      <div ref={containerRef} style={{ flex: 1, border: '1px solid #444' }} />
+    </div>
   )
 }
