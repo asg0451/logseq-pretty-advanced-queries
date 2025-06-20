@@ -4,7 +4,11 @@ import { EditorView, basicSetup } from 'codemirror'
 import { keymap } from '@codemirror/view'
 // The Clojure mode ships as a CodeMirror 6 LanguageSupport extension.
 // It works for both Clojure and ClojureScript.
-import * as clojureMode from '@nextjournal/clojure-mode'
+import {
+  default_extensions,
+  complete_keymap,
+  language_support,
+} from '@nextjournal/clojure-mode'
 
 export interface CodeMirrorEditorProps {
   /** Current editor value */
@@ -39,7 +43,9 @@ export default function CodeMirrorEditor({
       doc: value,
       extensions: [
         basicSetup,
-        clojureMode.language_support,
+        language_support,
+        keymap.of(complete_keymap),
+        ...default_extensions,
         keymap.of([
           {
             key: 'Shift-Enter',
