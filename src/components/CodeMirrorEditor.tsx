@@ -20,6 +20,8 @@ import {
   complete_keymap,
   language_support,
 } from '@nextjournal/clojure-mode'
+// Import prettier for formatting
+import prettier from 'prettier'
 
 export interface CodeMirrorEditorProps {
   /** Current editor value */
@@ -58,6 +60,33 @@ export default function CodeMirrorEditor({
   useEffect(() => {
     onRunRef.current = onRun
   }, [onRun])
+
+  // Format the current code using prettier with Clojure plugin
+  const formatCode = async () => {
+    const view = viewRef.current
+    if (!view) return
+
+    try {
+      const currentCode = view.state.doc.toString()
+      const formattedCode = await prettier.format(currentCode, {
+        parser: 'clojure',
+        plugins: ['@cospaia/prettier-plugin-clojure'],
+      })
+
+      // Apply the formatted code to the editor
+      view.dispatch({
+        changes: { from: 0, to: view.state.doc.length, insert: formattedCode },
+      })
+
+      // Notify parent component of the change
+      if (onChangeRef.current) {
+        onChangeRef.current(formattedCode)
+      }
+    } catch (error) {
+      console.error('Failed to format code:', error)
+      // Could show user-friendly error message here
+    }
+  }
 
   // Mount the EditorView once with initial value. Subsequent value changes handled separately.
   useEffect(() => {
@@ -117,7 +146,7 @@ export default function CodeMirrorEditor({
       viewRef.current?.destroy()
       viewRef.current = null
     }
-  }, [])
+  }, []) // Intentionally empty - we only want to mount once
 
   // Keep external value in sync when it changes (rare)
   useEffect(() => {
@@ -150,6 +179,16 @@ export default function CodeMirrorEditor({
             ▶ Run
           </button>
         )}
+
+        {/* Format Button */}
+        <button
+          type="button"
+          onClick={formatCode}
+          title="Format code using prettier"
+          style={{ cursor: 'pointer' }}
+        >
+          ✨ Format
+        </button>
 
         {/* Undo / Redo use CodeMirror commands */}
         <button
