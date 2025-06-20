@@ -1,0 +1,9 @@
+---
+description: background agent tasks
+globs:
+alwaysApply: false
+---
+to be included in all background agent runs.
+
+# guidelines
+- always ensure that the project lints and builds and passes tests before declaring success.
