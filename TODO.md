@@ -14,7 +14,8 @@
 - [X] Configure Vite single-file build (add plugin, adjust `vite.config.ts`) and verify `dist/main.js` output size
 - [X] Integrate toolbar button & modal panel within actual Logseq environment (`logseq.UI.registerUIItem`)
 - [X] Test plugin on Logseq Desktop ≥0.10.x for editor, execution, and results display
-- [ ] make it only take the query, not the whole advanced query map. this is what the api function takes and i dont want to reimplement the viewfn right now.
+- [ ] Use an EDN parser to extract the "query" portion of the query map, and pass that into the `datascriptQuery` api.
+- [ ] Embed (or if available in logseq, use) a clojurescript compiler + eval to evaluate the other components of the advanced query map, such as sort and view
 - [ ] Write README with setup, development, and release instructions; record demo GIF
 - [ ] Prepare Logseq marketplace submission (metadata, icon, description)
 - [X] Add smoke tests for UI components (CodeMirrorEditor, ResultViewer)
