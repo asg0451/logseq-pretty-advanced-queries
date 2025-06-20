@@ -5,7 +5,7 @@
 - [X] Install runtime dependencies: `codemirror`, `@nextjournal/clojure-mode`, `@codemirror/state`, `@codemirror/view`, `@logseq/libs`
 - [X] Install dev dependency: `vite-plugin-singlefile`
 - [X] Set up ESLint, Prettier, and Husky pre-commit hook for linting
-- [ ] Configure CI (GitHub Actions) for install, lint, test build
+- [X] Configure CI (GitHub Actions) for install, lint, test build
 - [ ] Scaffold sandbox folder with mocked Logseq API (`mock-logseq.ts`), seed data (`seed.ts`), and entry (`index.tsx`)
 - [ ] Implement bare CodeMirror editor component with Clojure mode, theme, and shortcuts
 - [ ] Build UI controls for advanced-query presets (`view`, `inputs`, `result-transform`) and EDN assembly logic
