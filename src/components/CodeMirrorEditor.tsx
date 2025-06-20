@@ -1,8 +1,18 @@
 import { useEffect, useRef } from 'react'
 import { EditorState } from '@codemirror/state'
 import { EditorView, basicSetup } from 'codemirror'
-import { keymap } from '@codemirror/view'
-import { undo, redo } from '@codemirror/commands'
+import {
+  highlightActiveLineGutter,
+  highlightActiveLine,
+  rectangularSelection,
+  keymap,
+} from '@codemirror/view'
+import {
+  highlightSelectionMatches,
+  search,
+  searchKeymap,
+} from '@codemirror/search'
+import { undo, redo, indentWithTab } from '@codemirror/commands'
 // The Clojure mode ships as a CodeMirror 6 LanguageSupport extension.
 // It works for both Clojure and ClojureScript.
 import {
@@ -70,6 +80,16 @@ export default function CodeMirrorEditor({
         language_support,
         keymap.of(complete_keymap),
         ...default_extensions,
+        // Enhanced editor ergonomics beyond the default basicSetup
+        highlightActiveLineGutter(),
+        highlightActiveLine(),
+        highlightSelectionMatches(),
+        search({ top: true }),
+        EditorView.lineWrapping,
+        rectangularSelection(),
+        keymap.of([indentWithTab]),
+        // Search panel & keys (Cmd/Ctrl+F, etc.)
+        keymap.of(searchKeymap),
         EditorView.updateListener.of(update => {
           if (update.docChanged && onChangeRef.current) {
             onChangeRef.current(update.state.doc.toString())
