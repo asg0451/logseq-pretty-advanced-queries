@@ -1,8 +1,14 @@
 {
-  "name": "logseq-query-editor",
+  "name": "logseq-plugin-advanced-query-editor",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "logseq": {
+    "id": "advanced-query-editor",
+    "title": "Advanced Query Editor",
+    "icon": "icon.png",
+    "main": "dist/index.html"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

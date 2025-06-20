@@ -5,15 +5,13 @@ import { viteSingleFile } from 'vite-plugin-singlefile'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), viteSingleFile()],
+  // Disable automatic copying of /public since the single-file output embeds
+  // everything and we want *only* index.html in dist.
+  publicDir: false,
   build: {
-    lib: {
-      entry: 'src/main.tsx',
-      formats: ['iife'],
-      name: 'main',
-    },
     rollupOptions: {
-      // Ensure React is bundled since Logseq will load the single file in its own environment
-      external: ['@cospaia/prettier-plugin-clojure'],
+      // Bundle all deps so Logseq can resolve module specifiers at runtime.
+      // No other output tweaks — vite-plugin-singlefile handles chunk inlining.
     },
   },
 })
