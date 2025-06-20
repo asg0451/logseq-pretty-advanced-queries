@@ -56,10 +56,7 @@ export default function CodeMirrorEditor({
     const state = EditorState.create({
       doc: value,
       extensions: [
-        basicSetup,
-        language_support,
-        keymap.of(complete_keymap),
-        ...default_extensions,
+        // Custom keymap first so it takes precedence over defaults
         keymap.of([
           {
             key: 'Shift-Enter',
@@ -69,6 +66,10 @@ export default function CodeMirrorEditor({
             },
           },
         ]),
+        basicSetup,
+        language_support,
+        keymap.of(complete_keymap),
+        ...default_extensions,
         EditorView.updateListener.of(update => {
           if (update.docChanged && onChangeRef.current) {
             onChangeRef.current(update.state.doc.toString())
