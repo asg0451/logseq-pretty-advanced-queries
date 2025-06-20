@@ -13,7 +13,7 @@ export default defineConfig({
     },
     rollupOptions: {
       // Ensure React is bundled since Logseq will load the single file in its own environment
-      external: [],
+      external: ['@cospaia/prettier-plugin-clojure'],
     },
   },
 })

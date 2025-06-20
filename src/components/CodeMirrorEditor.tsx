@@ -21,7 +21,8 @@ import {
   language_support,
 } from '@nextjournal/clojure-mode'
 // Import prettier for formatting
-import prettier from 'prettier'
+import prettier from 'prettier/standalone'
+import clojurePlugin from '@cospaia/prettier-plugin-clojure'
 
 export interface CodeMirrorEditorProps {
   /** Current editor value */
@@ -70,7 +71,7 @@ export default function CodeMirrorEditor({
       const currentCode = view.state.doc.toString()
       const formattedCode = await prettier.format(currentCode, {
         parser: 'clojure',
-        plugins: ['@cospaia/prettier-plugin-clojure'],
+        plugins: [clojurePlugin],
       })
 
       // Apply the formatted code to the editor

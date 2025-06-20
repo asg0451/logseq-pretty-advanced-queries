@@ -5,14 +5,9 @@ import { useState } from 'react'
 
 import CodeMirrorEditor from './CodeMirrorEditor'
 
-// Mock prettier
-vi.mock('prettier', () => ({
-  default: {
-    format: vi.fn(),
-  },
-}))
-
-import prettier from 'prettier'
+// Import real prettier and plugin
+import prettier from 'prettier/standalone'
+import clojurePlugin from '@cospaia/prettier-plugin-clojure'
 
 // A simple smoke test to verify the editor can mount without runtime errors.
 describe('CodeMirrorEditor', () => {
@@ -55,12 +50,15 @@ describe('CodeMirrorEditor', () => {
   })
 
   it('formats code when format button is clicked', async () => {
-    const mockFormat = vi.mocked(prettier.format)
     const unformattedCode = '(defn foo[x y](+ x y))'
-    const formattedCode = '(defn foo [x y]\n  (+ x y))'
 
-    // Mock prettier.format to return formatted code
-    mockFormat.mockResolvedValue(formattedCode)
+    // Compute expected formatted result using real prettier
+    const formattedCode = await prettier.format(unformattedCode, {
+      parser: 'clojure',
+      plugins: [clojurePlugin],
+    })
+
+    const formatSpy = vi.spyOn(prettier, 'format')
 
     const onChangeMock = vi.fn()
 
@@ -79,29 +77,28 @@ describe('CodeMirrorEditor', () => {
 
     // Wait for async formatting to complete
     await waitFor(() => {
-      // Verify prettier.format was called with correct arguments
-      expect(mockFormat).toHaveBeenCalledWith(unformattedCode, {
-        parser: 'clojure',
-        plugins: ['@cospaia/prettier-plugin-clojure'],
-      })
+      // Verify prettier.format was called
+      expect(formatSpy).toHaveBeenCalled()
 
       // Verify onChange was called with formatted code
       expect(onChangeMock).toHaveBeenCalledWith(formattedCode)
     })
+
+    formatSpy.mockRestore()
   })
 
   it('handles formatting errors gracefully', async () => {
-    const mockFormat = vi.mocked(prettier.format)
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const unformattedCode = '(defn incomplete'
 
-    // Mock prettier.format to throw an error
-    mockFormat.mockRejectedValue(new Error('Invalid Clojure syntax'))
+    const formatSpy = vi
+      .spyOn(prettier, 'format')
+      .mockRejectedValue(new Error('Invalid Clojure syntax'))
+
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     const onChangeMock = vi.fn()
 
-    render(
-      <CodeMirrorEditor value="(defn incomplete" onChange={onChangeMock} />,
-    )
+    render(<CodeMirrorEditor value={unformattedCode} onChange={onChangeMock} />)
 
     // Wait for editor to mount
     await waitFor(() => {
@@ -117,7 +114,7 @@ describe('CodeMirrorEditor', () => {
     // Wait for error handling
     await waitFor(() => {
       // Verify prettier.format was called
-      expect(mockFormat).toHaveBeenCalled()
+      expect(formatSpy).toHaveBeenCalled()
 
       // Verify error was logged
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -129,6 +126,7 @@ describe('CodeMirrorEditor', () => {
       expect(onChangeMock).not.toHaveBeenCalled()
     })
 
+    formatSpy.mockRestore()
     consoleSpy.mockRestore()
   })
 })
