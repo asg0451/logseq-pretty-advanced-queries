@@ -7,7 +7,7 @@
 - [X] Set up ESLint, Prettier, and Husky pre-commit hook for linting
 - [X] Configure CI (GitHub Actions) for install, lint, test build
 - [X] Scaffold sandbox folder with mocked Logseq API (`mock-logseq.ts`, `seed.ts`, and entry (`index.tsx`))
-- [ ] Implement bare CodeMirror editor component with Clojure mode, theme, and shortcuts
+- [X] Implement bare CodeMirror editor component with Clojure mode, theme, and shortcuts
 - [ ] Implement query runner using `logseq.DB.datascriptQuery` (mocked in sandbox) that returns prettified JSON
 - [ ] Create result viewer component with `<pre>` display, copy-to-clipboard, and auto-scroll
 - [ ] Integrate toolbar button & modal panel within actual Logseq environment (`logseq.UI.registerUIItem`)
