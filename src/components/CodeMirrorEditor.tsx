@@ -92,6 +92,7 @@ export default function CodeMirrorEditor({
       viewRef.current?.destroy()
       viewRef.current = null
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Keep external value in sync when it changes (rare)
