@@ -77,7 +77,6 @@ export default function CodeMirrorEditor({
   }
 
   // Mount the EditorView once. Callback refs used so we don't depend on onChange/onRun.
-
   useEffect(() => {
     if (!containerRef.current) return
     if (viewRef.current) return // already mounted
@@ -120,7 +119,7 @@ export default function CodeMirrorEditor({
       viewRef.current?.destroy()
       viewRef.current = null
     }
-  }, [])
+  }, []) // Intentionally empty - we only want to mount once
 
   // Keep external value in sync when it changes (rare)
   useEffect(() => {

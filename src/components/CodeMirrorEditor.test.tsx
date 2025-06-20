@@ -17,6 +17,29 @@ describe('CodeMirrorEditor', () => {
       expect(container.querySelector('.cm-editor')).toBeTruthy()
     })
   })
+
+  it('renders format button', () => {
+    render(<CodeMirrorEditor value="test code" />)
+
+    // Should always show the Format button
+    expect(screen.getByRole('button', { name: /format/i })).toBeInTheDocument()
+  })
+
+  it('renders with onRun prop', () => {
+    const onRun = () => {}
+    render(<CodeMirrorEditor value="test code" onRun={onRun} />)
+
+    // Should show the Run button when onRun is provided
+    expect(screen.getByRole('button', { name: /run/i })).toBeInTheDocument()
+  })
+
+  it('renders undo and redo buttons', () => {
+    render(<CodeMirrorEditor value="test code" />)
+
+    // Should always show Undo and Redo buttons
+    expect(screen.getByRole('button', { name: /undo/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /redo/i })).toBeInTheDocument()
+  })
 })
 
 // Add test to ensure the editor is not remounted (loses focus) on value updates.
