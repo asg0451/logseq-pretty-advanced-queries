@@ -101,6 +101,10 @@ export default function CodeMirrorEditor({
             fontFamily:
               'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace',
             fontSize: '14px',
+            textAlign: 'left',
+          },
+          '.cm-editor': {
+            textAlign: 'left',
           },
         }),
       ],

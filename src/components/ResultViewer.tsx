@@ -55,6 +55,7 @@ export default function ResultViewer({ result }: ResultViewerProps) {
 
       <pre
         ref={preRef}
+        className="result-viewer"
         style={{
           background: '#1e1e1e',
           color: '#d4d4d4',
