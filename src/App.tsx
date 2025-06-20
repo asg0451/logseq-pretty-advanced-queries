@@ -26,9 +26,52 @@ function App() {
     }
   }, [code])
 
+  const handleClose = useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const logseq = (globalThis as any).logseq
+
+    if (logseq?.hideMainUI) {
+      // Running inside Logseq - hide the plugin UI to return to main Logseq interface
+      logseq.hideMainUI()
+    } else {
+      // Running standalone - show message or close window if possible
+      const shouldClose = window.confirm('Close the Advanced Query Editor?')
+      if (shouldClose) {
+        window.close()
+      }
+    }
+  }, [])
+
   return (
     <main style={{ maxWidth: 800, margin: '2rem auto' }}>
-      <h1 style={{ textAlign: 'center' }}>Advanced Query Editor (Sandbox)</h1>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '1rem',
+        }}
+      >
+        <h1 style={{ textAlign: 'center', margin: 0, flex: 1 }}>
+          Advanced Query Editor (Sandbox)
+        </h1>
+        <button
+          type="button"
+          onClick={handleClose}
+          style={{
+            background: 'none',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            padding: '0.5rem',
+            cursor: 'pointer',
+            fontSize: '16px',
+            lineHeight: 1,
+          }}
+          title="Close and return to Logseq"
+        >
+          ✕
+        </button>
+      </div>
       <CodeMirrorEditor value={code} onChange={setCode} onRun={execute} />
 
       <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
