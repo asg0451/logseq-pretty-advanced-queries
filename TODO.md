@@ -8,7 +8,7 @@
 - [X] Configure CI (GitHub Actions) for install, lint, test build
 - [X] Scaffold sandbox folder with mocked Logseq API (`mock-logseq.ts`, `seed.ts`, and entry (`index.tsx`))
 - [X] Implement bare CodeMirror editor component with Clojure mode, theme, and shortcuts
-- [ ] Implement query runner using `logseq.DB.datascriptQuery` (mocked in sandbox) that returns prettified JSON
+- [X] Implement query runner using `logseq.DB.datascriptQuery` (mocked in sandbox) that returns prettified JSON
 - [ ] Create result viewer component with `<pre>` display, copy-to-clipboard, and auto-scroll
 - [ ] Integrate toolbar button & modal panel within actual Logseq environment (`logseq.UI.registerUIItem`)
 - [ ] Configure Vite single-file build (add plugin, adjust `vite.config.ts`) and verify `dist/main.js` output size
