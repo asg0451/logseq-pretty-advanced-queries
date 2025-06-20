@@ -4,7 +4,7 @@
 - [X] Bootstrap project via Vite React-TS template (`pnpm create vite@latest logseq-query-editor --template react-ts`)
 - [X] Install runtime dependencies: `codemirror`, `@nextjournal/clojure-mode`, `@codemirror/state`, `@codemirror/view`, `@logseq/libs`
 - [X] Install dev dependency: `vite-plugin-singlefile`
-- [ ] Set up ESLint, Prettier, and Husky pre-commit hook for linting
+- [X] Set up ESLint, Prettier, and Husky pre-commit hook for linting
 - [ ] Configure CI (GitHub Actions) for install, lint, test build
 - [ ] Scaffold sandbox folder with mocked Logseq API (`mock-logseq.ts`), seed data (`seed.ts`), and entry (`index.tsx`)
 - [ ] Implement bare CodeMirror editor component with Clojure mode, theme, and shortcuts
