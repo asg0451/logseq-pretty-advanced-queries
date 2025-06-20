@@ -58,3 +58,23 @@ if (typeof globalThis.ResizeObserver === 'undefined') {
 
 // Extend Vitest's expect with jest-dom matchers
 import '@testing-library/jest-dom/vitest'
+
+// Ensure prettier.format is configurable so that Vitest can spyOn it reliably.
+import { vi } from 'vitest'
+
+vi.mock('prettier/standalone', async () => {
+  const actual = await vi.importActual<typeof import('prettier/standalone')>(
+    'prettier/standalone',
+  )
+
+  // Create a brand-new object so that property descriptors are configurable
+  const wrapped: typeof actual = {
+    ...actual,
+    // Reattach the format function directly (not as an accessor) so that Vitest
+    // can spyOn/override it in individual tests.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    format: (actual as any).format,
+  }
+
+  return wrapped
+})
