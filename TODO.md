@@ -1,0 +1,18 @@
+- [X] Confirm PRD spec details (UI presets, feature scope) with stakeholders
+- [X] Initialize git repository & commit PRD and baseline files
+- [ ] Add MIT License file
+- [ ] Bootstrap project via Vite React-TS template (`pnpm create vite@latest logseq-query-editor --template react-ts`)
+- [ ] Install runtime dependencies: `codemirror`, `@nextjournal/clojure-mode`, `@codemirror/state`, `@codemirror/view`, `@logseq/libs`
+- [ ] Install dev dependency: `vite-plugin-singlefile`
+- [ ] Set up ESLint, Prettier, and Husky pre-commit hook for linting
+- [ ] Configure CI (GitHub Actions) for install, lint, test build
+- [ ] Scaffold sandbox folder with mocked Logseq API (`mock-logseq.ts`), seed data (`seed.ts`), and entry (`index.tsx`)
+- [ ] Implement bare CodeMirror editor component with Clojure mode, theme, and shortcuts
+- [ ] Build UI controls for advanced-query presets (`view`, `inputs`, `result-transform`) and EDN assembly logic
+- [ ] Implement query runner using `logseq.DB.datascriptQuery` (mocked in sandbox) that returns prettified JSON
+- [ ] Create result viewer component with `<pre>` display, copy-to-clipboard, and auto-scroll
+- [ ] Integrate toolbar button & modal panel within actual Logseq environment (`logseq.UI.registerUIItem`)
+- [ ] Configure Vite single-file build (add plugin, adjust `vite.config.ts`) and verify `dist/main.js` output size
+- [ ] Test plugin on Logseq Desktop ≥0.10.x for editor, execution, and results display
+- [ ] Write README with setup, development, and release instructions; record demo GIF
+- [ ] Prepare Logseq marketplace submission (metadata, icon, description)
