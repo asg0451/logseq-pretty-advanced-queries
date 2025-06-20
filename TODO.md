@@ -6,9 +6,8 @@
 - [X] Install dev dependency: `vite-plugin-singlefile`
 - [X] Set up ESLint, Prettier, and Husky pre-commit hook for linting
 - [X] Configure CI (GitHub Actions) for install, lint, test build
-- [ ] Scaffold sandbox folder with mocked Logseq API (`mock-logseq.ts`), seed data (`seed.ts`), and entry (`index.tsx`)
+- [X] Scaffold sandbox folder with mocked Logseq API (`mock-logseq.ts`, `seed.ts`, and entry (`index.tsx`))
 - [ ] Implement bare CodeMirror editor component with Clojure mode, theme, and shortcuts
-- [ ] Build UI controls for advanced-query presets (`view`, `inputs`, `result-transform`) and EDN assembly logic
 - [ ] Implement query runner using `logseq.DB.datascriptQuery` (mocked in sandbox) that returns prettified JSON
 - [ ] Create result viewer component with `<pre>` display, copy-to-clipboard, and auto-scroll
 - [ ] Integrate toolbar button & modal panel within actual Logseq environment (`logseq.UI.registerUIItem`)
