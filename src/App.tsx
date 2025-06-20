@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import './App.css'
 import CodeMirrorEditor from './components/CodeMirrorEditor'
 import { runQuery } from './utils/queryRunner'
+import ResultViewer from './components/ResultViewer'
 
 function App() {
   // Seed the editor with a tiny advanced-query template.
@@ -36,21 +37,7 @@ function App() {
         </button>
       </div>
 
-      {result && (
-        <pre
-          style={{
-            background: '#1e1e1e',
-            color: '#d4d4d4',
-            padding: '1rem',
-            marginTop: '1rem',
-            maxHeight: 400,
-            overflow: 'auto',
-            borderRadius: 4,
-          }}
-        >
-          {result}
-        </pre>
-      )}
+      <ResultViewer result={result} />
     </main>
   )
 }
