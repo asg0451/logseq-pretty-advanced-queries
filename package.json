@@ -28,6 +28,7 @@
     "@codemirror/commands": "^6.8.1",
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.37.2",
+    "@cospaia/prettier-plugin-clojure": "^0.0.2",
     "@logseq/libs": "^0.0.17",
     "@nextjournal/clojure-mode": "^0.3.3",
     "codemirror": "^6.0.2",
