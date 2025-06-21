@@ -15,7 +15,7 @@
 - [X] Integrate toolbar button & modal panel within actual Logseq environment (`logseq.UI.registerUIItem`)
 - [X] Test plugin on Logseq Desktop ≥0.10.x for editor, execution, and results display
 - [X] Use an EDN parser to extract the "query" portion of the query map, and pass that into the `datascriptQuery` api.
-- [ ] Embed (or if available in logseq, use) a clojurescript compiler (such as cljs.js) to eval to evaluate the other components of the advanced query map, such as `:view`. Postprocess the query with that.
+- [X] Embed (or if available in logseq, use) a clojurescript compiler (such as cljs.js) to eval to evaluate the other components of the advanced query map, such as `:view`. Postprocess the query with that.
 - [ ] Write README with setup, development, and release instructions; record demo GIF
 - [ ] Prepare Logseq marketplace submission (metadata, icon, description)
 - [X] Add smoke tests for UI components (CodeMirrorEditor, ResultViewer)

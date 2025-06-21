@@ -5,6 +5,10 @@
  * `instanceof` to remain resilient to bundler tree-shaking and cross-realm issues.
  */
 import { parseEDNString, toEDNString } from 'edn-data'
+import {
+  evaluateViewFunction,
+  evaluateResultTransform,
+} from './clojureScriptEvaluator'
 
 interface ednSymbol {
   key: string
@@ -42,12 +46,55 @@ export async function runQuery(query: string): Promise<string> {
     keywordAs: 'keyword',
   }) as Map<ednSymbol, unknown>
 
+  // Extract the query component
   const queryEdn = Array.from(parsed.entries()).find(
     ([key]) => key.key === 'query',
   )?.[1]
   const queryStr = toEDNString(queryEdn)
 
-  // Execute the query and stringify the result for display.
-  const raw = await logseqApi.DB.datascriptQuery(queryStr)
+  // Execute the DataScript query
+  let raw = await logseqApi.DB.datascriptQuery(queryStr)
+
+  // Extract other advanced query components
+  const viewComponent = Array.from(parsed.entries()).find(
+    ([key]) => key.key === 'view',
+  )?.[1]
+
+  const resultTransformComponent = Array.from(parsed.entries()).find(
+    ([key]) => key.key === 'result-transform',
+  )?.[1]
+
+  try {
+    // Apply result-transform if present
+    if (resultTransformComponent) {
+      const transformCode = toEDNString(resultTransformComponent)
+      raw = (await evaluateResultTransform(
+        transformCode,
+        raw as unknown[],
+      )) as unknown[]
+    }
+
+    // Apply view function if present
+    if (viewComponent) {
+      const viewCode = toEDNString(viewComponent)
+      raw = (await evaluateViewFunction(
+        viewCode,
+        raw as unknown[],
+      )) as unknown[]
+    }
+  } catch (error) {
+    console.error('Error processing advanced query components:', error)
+    // Return the raw results with an error message if ClojureScript evaluation fails
+    return JSON.stringify(
+      {
+        error: `Failed to process advanced query components: ${error}`,
+        rawResults: raw,
+      },
+      null,
+      2,
+    )
+  }
+
+  // Return the processed results
   return JSON.stringify(raw, null, 2)
 }
