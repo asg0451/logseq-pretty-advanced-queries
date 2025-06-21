@@ -5,9 +5,11 @@ import { runQuery } from './utils/queryRunner'
 import ResultViewer from './components/ResultViewer'
 
 function App() {
-  // Seed the editor with a tiny advanced-query template.
-  const [code, setCode] = useState(`{:title "Ad-hoc"
- :query [:find ?b :where [?b :block/refs #{"TODO"}]]}`)
+  // Seed the editor with a comprehensive advanced-query template that showcases the new functionality.
+  const [code, setCode] = useState(`{:title "Advanced Query Example"
+ :query [:find ?b :where [?b :block/refs #{"TODO"}]]
+ :view "table"
+ :collapsed false}`)
 
   const [result, setResult] = useState<string>('')
   const [isRunning, setIsRunning] = useState(false)
