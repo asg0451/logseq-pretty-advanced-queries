@@ -15,7 +15,24 @@
 - [X] Integrate toolbar button & modal panel within actual Logseq environment (`logseq.UI.registerUIItem`)
 - [X] Test plugin on Logseq Desktop ≥0.10.x for editor, execution, and results display
 - [X] Use an EDN parser to extract the "query" portion of the query map, and pass that into the `datascriptQuery` api.
+- [ ] Change the default query to:
+    {:title "All tasks"
+    :query [:find (pull ?b [*])
+            :where
+            [?b :block/marker _]]}
+
+- [ ] Pending resolution of https://github.com/logseq/logseq/issues/11956, allow rules to be specified, and make the default query:
+    {:title "TODO tasks"
+        :query [:find (pull ?b [*])
+                :in $ %
+                :where
+                (task ?b #{"TODO"})]}
+    (see https://github.com/logseq/logseq/blob/master/deps/db/src/logseq/db/file_based/rules.cljc#L36 for default rules)
+
+
 - [ ] Embed (or if available in logseq, use) a clojurescript compiler (such as cljs.js) to eval to evaluate the other components of the advanced query map, such as `:view`. Postprocess the query with that.
-- [ ] Write README with setup, development, and release instructions; record demo GIF
-- [ ] Prepare Logseq marketplace submission (metadata, icon, description)
+- [ ] Add more unit tests that test the eval behaviour
+- [ ] Add a datomic backend to the test for more accurate testing
+- [ ] Write README with setup, development, and release instructions
+- [X] Prepare Logseq marketplace submission (metadata, icon, description)
 - [X] Add smoke tests for UI components (CodeMirrorEditor, ResultViewer)
